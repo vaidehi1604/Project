@@ -1,5 +1,4 @@
 const client = require("../database");
-const queries = require("../queries/instituteType");
 const { v4: uuidv4 } = require("uuid");
 
 /**
@@ -12,9 +11,20 @@ const { v4: uuidv4 } = require("uuid");
  * @author vaidehi
  */
 const addInstituteType = (req, res) => {
+  // get name from body
   const { name } = req.body;
+
+  /* `is generating a unique identifier using the `uuidv4` function from the `uuid` library. */
   const id = uuidv4();
 
+  /*SQL query  that will create a table named "instituteType" in the database.*/
+  const create =
+    "CREATE TABLE instituteType (id UUID PRIMARY KEY, name VARCHAR(255))";
+
+  /* SQL query string that will insert data into the `instituteType` table. */
+  const addData = "INSERT INTO instituteType (id, name) VALUES ($1, $2)";
+
+  // Step 1: check table already exists or not
   client.query(
     "SELECT to_regclass('institutetype')",
     (checkErr, checkResult) => {
@@ -23,66 +33,42 @@ const addInstituteType = (req, res) => {
         res.status(500).send("Internal server error");
       } else if (checkResult.rows[0].to_regclass) {
         // Step 2: The table already exists; insert data into it
-        client.query(
-          queries.addInstituteType,
-          [id, name],
-          (insertErr, insertResult) => {
-            if (insertErr) {
-              console.error("Error inserting data:", insertErr);
-              res.status(500).send("Internal server error");
-            } else {
-              res.status(201).json({
-                id,
-                name,
-                message: "Institute Type Created Successfully",
-              });
-            }
+        client.query(addData, [id, name], (insertErr, insertResult) => {
+          if (insertErr) {
+            console.error("Error inserting data:", insertErr);
+            res.status(500).send("Internal server error");
+          } else {
+            res.status(201).json({
+              id,
+              name,
+              message: "Institute Type Created Successfully",
+            });
           }
-        );
+        });
       } else {
         // Step 3: The table doesn't exist; create it and insert data
-        client.query(queries.instituteType, (createErr, createResult) => {
+        client.query(create, (createErr, createResult) => {
           if (createErr) {
             console.error("Error creating institute type:", createErr);
             res.status(500).send("Internal server error");
           } else {
-            client.query(
-              queries.addInstituteType,
-              [id, name],
-              (insertErr, insertResult) => {
-                if (insertErr) {
-                  console.error("Error inserting data:", insertErr);
-                  res.status(500).send("Internal server error");
-                } else {
-                  res.status(201).json({
-                    id,
-                    name,
-                    message: "Institute Type Created Successfully",
-                  });
-                }
+            client.query(addData, [id, name], (insertErr, insertResult) => {
+              if (insertErr) {
+                console.error("Error inserting data:", insertErr);
+                res.status(500).send("Internal server error");
+              } else {
+                res.status(201).json({
+                  id,
+                  name,
+                  message: "Institute Type Created Successfully",
+                });
               }
-            );
+            });
           }
         });
       }
     }
   );
-
-  // client.query(queries.instituteType, (err, result) => {
-  //   if (err) {
-  //     console.error("Error creating institute type:", err);
-  //     res.status(500).send("Internal server error");
-  //   } else {
-  //     res
-  //       .status(201)
-  //       .json({ id, message: "Institute Type Created Successfully" });
-  //   }
-  // });
-
-  // client.query(queries.addInstituteType, [id, name], (err, result) => {
-  //   if (err) throw err;
-  //   res.status(201).json("Student Created Successfully!!");
-  // });
 };
 
 /**
@@ -91,7 +77,7 @@ const addInstituteType = (req, res) => {
  * @param {Request} req
  * @param {Response} res
  * @throwsF
- * @description This method will create institute types and add data to database
+ * @description This method will get institute data from database
  * @author vaidehi
  */
 const getInstituteType = async (req, res) => {
@@ -132,7 +118,7 @@ const getInstituteType = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  * @throwsF
- * @description This method will create institute types and add data to database
+ * @description This method will edit institute types and add data to database
  * @author vaidehi
  */
 const updateInstituteName = async (req, res) => {
@@ -168,14 +154,14 @@ const updateInstituteName = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  * @throwsF
- * @description This method will create institute types and add data to database
+ * @description This method will delete institute types data by id
  * @author vaidehi
  */
 const deleteInstituteType = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Construct a SQL query to update the institute name
+    // Construct a SQL query to delete the institute data by id
     const deleteQuery = `
     DELETE FROM institutetype WHERE id = $1
     `;
