@@ -161,7 +161,7 @@ const login = (req, res) => {
  * @param {Request} req
  * @param {Response} res
  * @throwsF
- * @description This method will create institute types and add data to database
+ * @description forgot password api to send mail and send OTP
  * @author vaidehi
  */
 const forgotPassword = async (req, res) => {
@@ -231,10 +231,94 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+/**
+ * @name verifyOtp
+ * @file admin.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throwsF
+ * @description verify email
+ * @author vaidehi
+ */
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
 
+    const query = "SELECT * FROM admin WHERE email = $1 AND otp=$2";
+
+    client.query(query, [email, otp], async (queryErr, queryResult) => {
+      if (queryErr) {
+        res.status(500).send("Internal server error");
+      } else {
+        if (queryResult.rows.length === 1) {
+          return res.status(404).json({ error: "OTP Verify successfully!!" });
+        } else {
+          // User does not exist
+          return res.status(404).json({ error: "Invalid OTP" });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/**
+ * @name resetPassword
+ * @file admin.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throwsF
+ * @description verify email
+ * @author vaidehi
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
+
+    const query = "SELECT * FROM admin WHERE email = $1 AND otp = $2";
+
+    client.query(query, [email, otp], async (queryErr, queryResult) => {
+      if (queryErr) {
+        console.error("Error querying database:", queryErr);
+        return res.status(500).send("Internal server error");
+      } else {
+        if (queryResult.rows.length === 1) {
+          const hashedPassword = bcrypt.hashSync(password, 10);
+          const updateQuery = "UPDATE admin SET password = $1 WHERE email = $2";
+
+          client.query(
+            updateQuery,
+            [hashedPassword, email],
+            (updateErr, updateResult) => {
+              if (updateErr) {
+                console.error("Error updating password:", updateErr);
+                return res.status(500).send("Internal server error");
+              } else {
+                console.log("Password updated");
+                return res
+                  .status(200)
+                  .json({ message: "Password set successfully" });
+              }
+            }
+          );
+        } else {
+          // User does not exist or invalid data
+          return res.status(404).json({ error: "Invalid Data" });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   create,
   login,
   forgotPassword,
+  verifyOtp,
+  resetPassword,
 };
