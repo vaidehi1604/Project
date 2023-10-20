@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 /**
  * @name addInstituteType
- * @file InstitueTypeController.js
+ * @file InstitueType.js
  * @param {Request} req
  * @param {Response} res
  * @throwsF
@@ -73,7 +73,7 @@ const addInstituteType = (req, res) => {
 
 /**
  * @name getInstituteType
- * @file InstitueTypeController.js
+ * @file InstitueType.js
  * @param {Request} req
  * @param {Response} res
  * @throwsF
@@ -114,7 +114,7 @@ const getInstituteType = async (req, res) => {
 
 /**
  * @name updateInstituteName
- * @file InstitueTypeController.js
+ * @file InstitueType.js
  * @param {Request} req
  * @param {Response} res
  * @throwsF
@@ -150,7 +150,7 @@ const updateInstituteName = async (req, res) => {
 
 /**
  * @name updateInstituteName
- * @file InstitueTypeController.js
+ * @file InstitueType.js
  * @param {Request} req
  * @param {Response} res
  * @throwsF

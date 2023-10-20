@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        margin: auto;
+        text-align: center;
+      }
+      .box {
+        margin: auto;
+        border: 1px solid #cfc5c5;
+        padding: 10px;
+        width: 600px;
+        height: 200px;
+        border-radius: 5px;
+        margin-top: 50px;
+        background: rgb(189, 191, 210);
+
+        background: linear-gradient(
+          90deg,
+          rgb(187, 190, 210) 22%,
+          rgb(162, 218, 222) 71%
+        );
+
+        background: -moz-linear-gradient(
+          90deg,
+          rgb(232, 232, 234) 22%,
+          rgb(126, 171, 174) 71%
+        );
+
+        background: -webkit-linear-gradient(
+          90deg,
+          rgb(193, 195, 210) 22%,
+          rgb(126, 171, 174) 71%
+        );
+
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#3D4CBB", endColorstr="#2AEAF7", GradientType=1 );
+      }
+
+      div {
+        /* Add some styling to the div elements */
+        /* border: 1px solid #080505; */
+        /* padding: 20px; */
+        margin: auto;
+        text-align: center;
+      }
+
+      h1 {
+        color: whitesmoke;
+      }
+
+      hr {
+        border-color: #eee2e2;
+      }
+
+      h3 {
+        color: whitesmoke;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- style="background-image: url('/email4.png');background-repeat: no-repeat;margin: auto;" class="box" -->
+    <div class="box">
+      <div>
+        <h1>My Project</h1>
+        <hr />
+      </div>
+      <div class="center-content">
+        <h3>Here is your forgot password OTP: <%= otp %></h3>
+      </div>
+    </div>
+  </body>
+</html>
