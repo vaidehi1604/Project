@@ -198,13 +198,13 @@ const forgotPassword = async (req, res) => {
             host: "sandbox.smtp.mailtrap.io",
             port: 2525,
             auth: {
-              user: "4d76b7683bd288",
-              pass: "8b2edf02d1c564",
+              user: "3379c75fe59e63",
+              pass: "f9162afb716029",
             },
           });
 
           let message = {
-            from: "your_email@gmail.com",
+            from: "hello@gmail.com",
             to: email,
             subject: "Hello, World!",
             html: emailFile,
@@ -230,6 +230,8 @@ const forgotPassword = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
 
 module.exports = {
   create,
